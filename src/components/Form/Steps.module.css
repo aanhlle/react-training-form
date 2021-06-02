@@ -1,0 +1,15 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.overlay {
+  border-radius: 10px;
+  padding: 10px;
+  background-color: #f3f3f3;
+}
+
+.highlight {
+  border: 2px solid #4e71ba;
+}

@@ -1,45 +1,74 @@
 import styles from "./InputForm.module.css";
 import Card from "../UI/Card";
+import {Formik, Form, Field} from 'formik'
+import * as Yup from 'yup'
+import Button from '../UI/Button'
 
-const InputForm = (props) => {
-  if (props.step === "secondStep") {
-    return (
-      <Card>
-        <form>
-          <label>Your Company Name</label>
-          <input type="text"></input>
-          <label>Number of Employees</label>
-          <input type="email"></input>
-        </form>
-      </Card>
-    );
-  }
-  if (props.step === "thirdStep") {
-    return (
-      <Card>
-        <form>
-          <label for="places">From where did you hear about us?</label>
+const Page1 = () => {
+  return (
+    <>
+      
+      <label htmlFor="name">Full Name</label>
+        <Field name='name' type='text'/>
+        <label htmlFor="email">Your Email</label>
+        <Field name='email' type='email'/>
+      
+    </>
+  )
+}
+
+const Page2 = () => {
+  return (
+    <>
+       
+        <label htmlFor="companyName">Your Company Name</label>
+          <Field name='companyName' type='text'/>
+          <label htmlFor="numberOfEmployees">Number of Employees</label>
+          <Field name='numberOfEmployees' type='number'/>
+        
+    </>
+  )
+}
+
+const Page3 = () => {
+  return (
+    <>
+       
+        <label for="places">From where did you hear about us?</label>
           <select id="places">
             <option>Facebook</option>
             <option>Internet</option>
             <option>Friends</option>
             <option>Email marketing</option>
           </select>
-          <input type="checkbox" id="terms" />
-          <label for="terms">I accept terms & conditions</label>
-        </form>
-      </Card>
-    );
-  }
+          <Field name='termsAgree' type="checkbox"/>
+          <label HTMLfor="termsAgree">I accept terms & conditions</label>
+        
+    </>
+  )
+}
+
+const InputForm = (props) => {
 
   return (
     <Card>
-      <form className={styles["form-control"]}>
-        <label>Full Name</label>
-        <input type="text"></input>
-        <label>Your Email</label>
-        <input type="email"></input>
-      </form>
+      <Formik initialValues ={{
+        name: '',
+        email: '',
+        companyName: '',
+        numberOfEmployees: 0,
+        termsAgree: false
+      }} onSubmit={(e)=>{console.log(e)}}>
+        <Form>
+        <Page1/>
+        <div className={styles["button-container"]}>
+        <Button className={styles["button-prev"]}>PREVIOUS</Button>
+        <Button className={styles["button-next"]}>NEXT</Button>
+      </div>
+        </Form>
+        
+        
+      </Formik>
     </Card>
   );
 };

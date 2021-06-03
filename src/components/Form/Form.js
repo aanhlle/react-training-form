@@ -11,10 +11,7 @@ const Form = (props) => {
       <ProgressBar />
       <Steps />
       <InputForm />
-      <div className={styles["button-container"]}>
-        <Button className={styles["button-prev"]}>PREVIOUS</Button>
-        <Button className={styles["button-next"]}>NEXT</Button>
-      </div>
+ 
     </>
   );
 };

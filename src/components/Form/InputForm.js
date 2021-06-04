@@ -3,20 +3,18 @@ import Card from "../UI/Card";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Button from "../UI/Button";
-import { useState } from "react";
+import { CheckboxWithLabel } from "formik-material-ui";
 
 const StepOne = () => {
   return (
-    <>
-      <Card>
-        <label htmlFor="name">Full Name</label>
-        <Field name="name" type="text" />
-        <ErrorMessage name="name" />
-        <label htmlFor="email">Your Email</label>
-        <Field name="email" type="email" />
-        <ErrorMessage name="email" />
-      </Card>
-    </>
+    <Card>
+      <label htmlFor="name">Full Name</label>
+      <Field name="name" type="text" />
+      <ErrorMessage name="name" />
+      <label htmlFor="email">Your Email</label>
+      <Field name="email" type="email" />
+      <ErrorMessage name="email" />
+    </Card>
   );
 };
 
@@ -30,16 +28,14 @@ const stepOneValidSchema = Yup.object({
 
 const StepTwo = () => {
   return (
-    <>
-      <Card>
-        <label htmlFor="companyName">Your Company Name</label>
-        <Field name="companyName" type="text" />
-        <ErrorMessage name="companyName" />
-        <label htmlFor="numberOfEmployees">Number of Employees</label>
-        <Field name="numberOfEmployees" />
-        <ErrorMessage name="numberOfEmployees" />
-      </Card>
-    </>
+    <Card>
+      <label htmlFor="companyName">Your Company Name</label>
+      <Field name="companyName" type="text" />
+      <ErrorMessage name="companyName" />
+      <label htmlFor="numberOfEmployees">Number of Employees</label>
+      <Field name="numberOfEmployees" />
+      <ErrorMessage name="numberOfEmployees" />
+    </Card>
   );
 };
 
@@ -53,19 +49,21 @@ const stepTwoValidSchema = Yup.object({
 
 const StepThree = () => {
   return (
-    <>
-      <Card>
-        <label for="places">From where did you hear about us?</label>
-        <select id="places">
-          <option>Facebook</option>
-          <option>Internet</option>
-          <option>Friends</option>
-          <option>Email marketing</option>
-        </select>
-        <Field name="termsAgree" type="checkbox" />
-        <label HTMLfor="termsAgree">I accept terms & conditions</label>
-      </Card>
-    </>
+    <Card>
+      <label for="places">From where did you hear about us?</label>
+      <select id="places">
+        <option>Facebook</option>
+        <option>Internet</option>
+        <option>Friends</option>
+        <option>Email marketing</option>
+      </select>
+      <Field
+        component={CheckboxWithLabel}
+        type="checkbox"
+        name="checkbox"
+        Label={{ label: "I agree to terms & condition." }}
+      />
+    </Card>
   );
 };
 
@@ -73,24 +71,9 @@ const pages = [<StepOne />, <StepTwo />, <StepThree />];
 const schemas = [stepOneValidSchema, stepTwoValidSchema];
 
 const InputForm = (props) => {
-  const [step, setStep] = useState(0);
-
-  const handleNext = () => {
-    setStep((prev) => prev + 1);
-  };
-
-  const handlePrev = () => {
-    setStep((prev) => prev - 1);
-  };
-
-  const handleReset = (e, { resetForm }) => {
-    setStep(0);
-    resetForm();
-  };
-
   return (
     <Formik
-      validationSchema={schemas[step]}
+      validationSchema={schemas[props.step]}
       initialValues={{
         name: "",
         email: "",
@@ -98,17 +81,23 @@ const InputForm = (props) => {
         numberOfEmployees: "",
         termsAgree: false,
       }}
-      onSubmit={handleReset}
+      onSubmit={props.handleReset}
     >
       <Form className={styles["form-control"]}>
-        {pages[step]}
+        {pages[props.step]}
         <div className={styles["button-container"]}>
-          {step < pages.length - 1 ? (
+          {props.step < pages.length - 1 ? (
             <>
-              <Button className={styles["button-prev"]} onClick={handlePrev}>
+              <Button
+                className={styles["button-prev"]}
+                onClick={props.handlePrev}
+              >
                 PREVIOUS
               </Button>
-              <Button className={styles["button-next"]} onClick={handleNext}>
+              <Button
+                className={styles["button-next"]}
+                onClick={props.handleNext}
+              >
                 NEXT
               </Button>
             </>

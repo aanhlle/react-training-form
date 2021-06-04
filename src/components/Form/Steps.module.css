@@ -13,3 +13,7 @@
 .highlight {
   border: 2px solid #4e71ba;
 }
+
+.complete {
+  border: 2px solid green;
+}

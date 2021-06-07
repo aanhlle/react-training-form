@@ -26,6 +26,7 @@ const Form = (props) => {
     <>
       <ProgressBar step={step} />
       <Steps step={step} />
+
       <InputForm
         step={step}
         handleNext={handleNext}

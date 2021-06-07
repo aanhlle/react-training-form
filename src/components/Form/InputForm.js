@@ -48,7 +48,7 @@ const InputFormv2 = (props) => {
           type: "text",
           htmlFor: "numberOfEmployees",
           content: "Number of Employees",
-          errorMessage: "companyName",
+          errorMessage: "numberOfEmployees",
         },
       ],
     },
@@ -79,33 +79,64 @@ const InputFormv2 = (props) => {
     },
   ];
 
+  let lastStep = listFormArray.length - 1;
+
+  // const dynamicFormGen = (step) => {
+  //   return listFormArray[step].listField.map((field) => {
+  //     if (step === lastStep) {
+  //       return (
+  //         <React.Fragment key={field.key}>
+  //           {selectOptionGen(field.select)}
+
+  //           <Field
+  //             style={{ display: "block" }}
+  //             component={CheckboxWithLabel}
+  //             type={field.type}
+  //             name={field.name}
+  //             Label={field.Label}
+  //           />
+  //         </React.Fragment>
+  //       );
+  //     }
+
+  //     return (
+  //       <React.Fragment key={field.key}>
+  //         <label htmlFor={field.htmlFor}>{field.content}</label>
+  //         <Field name={field.name} type={field.type} />
+  //         <ErrorMessage name={field.name} />
+  //       </React.Fragment>
+  //     );
+  //   });
+  // };
+
   const dynamicFormGen = (step) => {
-    return listFormArray[step].listField.map((field) => {
-      let lastStep = listFormArray.length - 1;
-      if (step === lastStep) {
-        return (
-          <React.Fragment key={field.key}>
-            {selectOptionGen(field.select)}
+    return (
+      <>
+        {listFormArray[step].listField.map((field) => (
+          <>
+            {step === lastStep ? (
+              <React.Fragment key={field.key}>
+                {selectOptionGen(field.select)}
 
-            <Field
-              style={{ display: "block" }}
-              component={CheckboxWithLabel}
-              type={field.type}
-              name={field.name}
-              Label={field.Label}
-            />
-          </React.Fragment>
-        );
-      }
-
-      return (
-        <React.Fragment key={field.key}>
-          <label htmlFor={field.htmlFor}>{field.content}</label>
-          <Field name={field.name} type={field.type} />
-          <ErrorMessage name={field.name} />
-        </React.Fragment>
-      );
-    });
+                <Field
+                  style={{ display: "block" }}
+                  component={CheckboxWithLabel}
+                  type={field.type}
+                  name={field.name}
+                  Label={field.Label}
+                />
+              </React.Fragment>
+            ) : (
+              <React.Fragment key={field.key}>
+                <label htmlFor={field.htmlFor}>{field.content}</label>
+                <Field name={field.name} type={field.type} />
+                <ErrorMessage name={field.name} />
+              </React.Fragment>
+            )}
+          </>
+        ))}
+      </>
+    );
   };
 
   const selectOptionGen = (selectArr) => {
@@ -155,7 +186,7 @@ const InputFormv2 = (props) => {
       <Form className={styles["form-control"]}>
         <Card>{dynamicFormGen(props.step)}</Card>
         <div className={styles["button-container"]}>
-          {props.step < listFormArray.length - 1 ? (
+          {props.step < lastStep ? (
             <>
               <Button
                 className={styles["button-prev"]}

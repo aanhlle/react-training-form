@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import Button from "../UI/Button";
 import { CheckboxWithLabel } from "formik-material-ui";
 
-const InputFormv2 = (props) => {
+const InputForm = (props) => {
   const listFormArray = [
     {
       id: 0,
@@ -18,7 +18,6 @@ const InputFormv2 = (props) => {
           type: "text",
           htmlFor: "name",
           content: "Full Name",
-          errorMessage: "name",
         },
         {
           key: 2,
@@ -26,7 +25,6 @@ const InputFormv2 = (props) => {
           type: "email",
           htmlFor: "email",
           content: "Your Email",
-          errorMessage: "email",
         },
       ],
     },
@@ -40,7 +38,6 @@ const InputFormv2 = (props) => {
           type: "text",
           hmtlFor: "companyName",
           content: "Your Company Name",
-          errorMessage: "companyName",
         },
         {
           key: 2,
@@ -48,7 +45,6 @@ const InputFormv2 = (props) => {
           type: "text",
           htmlFor: "numberOfEmployees",
           content: "Number of Employees",
-          errorMessage: "numberOfEmployees",
         },
       ],
     },
@@ -81,34 +77,6 @@ const InputFormv2 = (props) => {
 
   let lastStep = listFormArray.length - 1;
 
-  // const dynamicFormGen = (step) => {
-  //   return listFormArray[step].listField.map((field) => {
-  //     if (step === lastStep) {
-  //       return (
-  //         <React.Fragment key={field.key}>
-  //           {selectOptionGen(field.select)}
-
-  //           <Field
-  //             style={{ display: "block" }}
-  //             component={CheckboxWithLabel}
-  //             type={field.type}
-  //             name={field.name}
-  //             Label={field.Label}
-  //           />
-  //         </React.Fragment>
-  //       );
-  //     }
-
-  //     return (
-  //       <React.Fragment key={field.key}>
-  //         <label htmlFor={field.htmlFor}>{field.content}</label>
-  //         <Field name={field.name} type={field.type} />
-  //         <ErrorMessage name={field.name} />
-  //       </React.Fragment>
-  //     );
-  //   });
-  // };
-
   const dynamicFormGen = (step) => {
     return (
       <>
@@ -119,18 +87,22 @@ const InputFormv2 = (props) => {
                 {selectOptionGen(field.select)}
 
                 <Field
-                  style={{ display: "block" }}
                   component={CheckboxWithLabel}
                   type={field.type}
                   name={field.name}
                   Label={field.Label}
                 />
+                <div className={styles.error}>
+                  <ErrorMessage name={field.name} />
+                </div>
               </React.Fragment>
             ) : (
               <React.Fragment key={field.key}>
                 <label htmlFor={field.htmlFor}>{field.content}</label>
                 <Field name={field.name} type={field.type} />
-                <ErrorMessage name={field.name} />
+                <div className={styles.error}>
+                  <ErrorMessage name={field.name} />
+                </div>
               </React.Fragment>
             )}
           </>
@@ -157,20 +129,35 @@ const InputFormv2 = (props) => {
   const stepOneValidSchema = Yup.object({
     name: Yup.string()
       .max(30, "Must be 30 characters or less")
-      .required("Required"),
+      .required("*required"),
 
-    email: Yup.string().email("Invalid email address").required("Required"),
+    email: Yup.string().email("Invalid email address").required("*required"),
   });
 
   const stepTwoValidSchema = Yup.object({
-    companyName: Yup.string().required("Required"),
+    companyName: Yup.string().required("*required"),
     numberOfEmployees: Yup.number()
       .typeError("Should be a valid value")
-      .required("Required")
+      .required("*required")
       .label("Number of Employees"),
   });
 
-  const schemas = [stepOneValidSchema, stepTwoValidSchema];
+  const stepThreeValidSchema = Yup.object({
+    checkbox: Yup.boolean().oneOf([true], "You have to agree to terms!"),
+  });
+
+  const schemas = [
+    stepOneValidSchema,
+    stepTwoValidSchema,
+    stepThreeValidSchema,
+  ];
+
+  const nextClickHandle = (formikBag) => {
+    if (formikBag.isValid && formikBag.dirty) {
+      props.handleNext();
+    }
+  };
+
   return (
     <Formik
       validationSchema={schemas[props.step]}
@@ -179,35 +166,40 @@ const InputFormv2 = (props) => {
         email: "",
         companyName: "",
         numberOfEmployees: "",
-        termsAgree: false,
+        checkbox: false,
       }}
       onSubmit={props.handleReset}
     >
-      <Form className={styles["form-control"]}>
-        <Card>{dynamicFormGen(props.step)}</Card>
-        <div className={styles["button-container"]}>
-          {props.step < lastStep ? (
-            <>
-              <Button
-                className={styles["button-prev"]}
-                onClick={props.handlePrev}
-              >
-                PREVIOUS
-              </Button>
-              <Button
-                className={styles["button-next"]}
-                onClick={props.handleNext}
-              >
-                NEXT
-              </Button>
-            </>
-          ) : (
-            <Button type="submit">RESET</Button>
-          )}
-        </div>
-      </Form>
+      {(formikBag) => (
+        <Form className={styles["form-control"]}>
+          <Card>{dynamicFormGen(props.step)}</Card>
+          <div className={styles["button-container"]}>
+            {props.step < lastStep ? (
+              <>
+                <Button
+                  className={styles["button-prev"]}
+                  onClick={props.handlePrev}
+                >
+                  PREVIOUS
+                </Button>
+                <Button
+                  type="submit"
+                  className={styles["button-next"]}
+                  onClick={() => {
+                    nextClickHandle(formikBag);
+                  }}
+                >
+                  NEXT
+                </Button>
+              </>
+            ) : (
+              <Button type="submit">RESET</Button>
+            )}
+          </div>
+        </Form>
+      )}
     </Formik>
   );
 };
 
-export default InputFormv2;
+export default InputForm;

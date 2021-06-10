@@ -152,11 +152,20 @@ const InputForm = (props) => {
     stepThreeValidSchema,
   ];
 
-  const nextClickHandle = (formikBag) => {
+  async function prevClickHandle(formikBag) {
+    props.handlePrev();
+    await formikBag.validateForm();
+    formikBag.setTouched();
+    console.log("valid: " + formikBag.isValid + "dirty: " + formikBag.dirty);
+  }
+
+  async function nextClickHandle(formikBag) {
+    await formikBag.validateForm();
+    console.log("valid: " + formikBag.isValid + "dirty: " + formikBag.dirty);
     if (formikBag.isValid && formikBag.dirty) {
       props.handleNext();
     }
-  };
+  }
 
   return (
     <Formik
@@ -168,7 +177,7 @@ const InputForm = (props) => {
         numberOfEmployees: "",
         checkbox: false,
       }}
-      onSubmit={props.handleReset}
+      onSubmit={props.step === lastStep ? props.handleReset : () => {}}
     >
       {(formikBag) => (
         <Form className={styles["form-control"]}>
@@ -178,7 +187,9 @@ const InputForm = (props) => {
               <>
                 <Button
                   className={styles["button-prev"]}
-                  onClick={props.handlePrev}
+                  onClick={() => {
+                    prevClickHandle(formikBag);
+                  }}
                 >
                   PREVIOUS
                 </Button>

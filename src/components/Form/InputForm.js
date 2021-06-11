@@ -4,7 +4,6 @@ import Card from "../UI/Card";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Button from "../UI/Button";
-import { CheckboxWithLabel } from "formik-material-ui";
 
 const InputForm = (props) => {
   const listFormArray = [
@@ -86,12 +85,11 @@ const InputForm = (props) => {
               <React.Fragment key={field.key}>
                 {selectOptionGen(field.select)}
 
-                <Field
-                  component={CheckboxWithLabel}
-                  type={field.type}
-                  name={field.name}
-                  Label={field.Label}
-                />
+                <label className={styles.checkbox}>
+                  {field.Label.label}
+                  <Field name={field.name} type={field.type} />
+                </label>
+
                 <div className={styles.error}>
                   <ErrorMessage name={field.name} />
                 </div>

@@ -1,6 +1,6 @@
 import ProgressBar from "./ProgressBar";
 import Steps from "./Steps";
-import InputForm from "./InputForm";
+import InputForm from "./InputForm/InputForm";
 import { useState } from "react";
 
 import React from "react";

@@ -5,6 +5,8 @@ import { useState } from "react";
 
 import React from "react";
 
+import MyTest from "../MyTest";
+
 const Form = (props) => {
   const [step, setStep] = useState(0);
 
@@ -17,13 +19,13 @@ const Form = (props) => {
     setStep((prev) => prev - 1);
   };
 
-  const handleReset = (e, { resetForm }) => {
+  const handleReset = () => {
     setStep(0);
-    resetForm();
   };
 
   return (
     <>
+      <MyTest />
       <ProgressBar step={step} />
       <Steps step={step} />
 
